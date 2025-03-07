@@ -4,12 +4,13 @@
 import numpy as np
 from numpy.random import default_rng
 from scipy.linalg import pinv, svd
-from scipy.sparse import isspmatrix, csr_matrix
+from scipy.sparse import isspmatrix
 from scipy.sparse.linalg import svds
 from ._utils import _validate_rank
 
 
-def cur_decomposition(X, rank, random_state=None, sampling="uniform", regularization=0.0):
+def cur_decomposition(X, rank, random_state=None, sampling="uniform",
+                      regularization=0.0):
     """
     CUR decomposition with optional leverage score sampling and regularization.
     ...
