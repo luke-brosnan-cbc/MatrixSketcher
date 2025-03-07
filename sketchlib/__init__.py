@@ -4,7 +4,7 @@ from .random_projection import random_projection
 from .subsampled_svd import subsampled_svd
 from .nystrom import nystrom
 from .countsketch import countsketch
-from .fast_transforms import fast_fourier_transform, fast_walsh_hadamard_transform
+from .fast_transforms import fft, fwht
 from .leverage_score import leverage_score_sampling
 from .cur_decomposition import cur_decomposition
 from .row_sampling import row_sampling
