@@ -15,7 +15,8 @@ def fft(X):
     if isspmatrix(X):
         X = X.toarray()
     return np.fft.fft(X, axis=0).real
-    
+
+
 def fwht(X, random_state=None, pad_or_error="error"):
     """
     Randomized FWHT with optional zero-padding.
