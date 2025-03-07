@@ -5,6 +5,7 @@ import numpy as np
 from numpy.random import default_rng
 from scipy.sparse import isspmatrix, coo_matrix
 
+
 def countsketch(X, sketch_size, random_state=None, sparse_output=True):
     """
     CountSketch feature hashing.
