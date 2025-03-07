@@ -5,6 +5,7 @@ import numpy as np
 from numpy.random import default_rng
 from scipy.sparse import isspmatrix
 
+
 def row_sampling(X, sample_size, random_state=None, weighted=False):
     """
     Row sampling with optional norm-based weighting.
