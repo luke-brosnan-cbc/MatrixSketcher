@@ -6,6 +6,7 @@ from numpy.random import default_rng
 from scipy.sparse import isspmatrix
 from ._utils import _is_power_of_two
 
+
 def fft(X):
     """
     FFT along columns. Not a FWHT.
@@ -14,6 +15,7 @@ def fft(X):
     if isspmatrix(X):
         X = X.toarray()
     return np.fft.fft(X, axis=0).real
+    
 
 def fwht(X, random_state=None, pad_or_error="error"):
     """
