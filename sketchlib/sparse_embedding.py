@@ -5,6 +5,7 @@ import numpy as np
 from numpy.random import default_rng
 from scipy.sparse import isspmatrix, random as sparse_random
 
+
 def sparse_embedding(X, sketch_size, density=0.1, random_state=None):
     """
     Sparse random projection with controlled non-zero density.
