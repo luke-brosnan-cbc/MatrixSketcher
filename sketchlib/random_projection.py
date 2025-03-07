@@ -5,6 +5,7 @@ import numpy as np
 from numpy.random import default_rng
 from scipy.sparse import isspmatrix
 
+
 def random_projection(X, target_dim, random_state=None):
     """
     Apply Johnson-Lindenstrauss random projection.
