@@ -9,6 +9,7 @@ from scipy.sparse.linalg import svds
 
 from ._utils import _validate_rank
 
+
 def subsampled_svd(X, rank, random_state=None, use_partial_svd=True):
     """
     Subsample rows and compute low-rank approximation via SVD.
