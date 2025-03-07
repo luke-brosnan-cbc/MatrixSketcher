@@ -9,7 +9,8 @@ from scipy.sparse.linalg import svds
 from ._utils import _validate_rank
 
 
-def leverage_score_sampling(X, sample_size, rank=None, random_state=None, scale_rows=False):
+def leverage_score_sampling(X, sample_size, rank=None, random_state=None,
+                            scale_rows=False):
     """
     Leverage score row sampling.
     ...
