@@ -6,6 +6,7 @@ from numpy.random import default_rng
 from scipy.linalg import pinv
 from ._utils import _validate_rank
 
+
 def nystrom(
     X_or_K,
     rank,
