@@ -85,4 +85,3 @@ def nystrom(
 
     # 5) Return factorized or full
     return (C, W_pinv) if return_factorized else C @ W_pinv @ C.T
-
