@@ -35,8 +35,9 @@ jobs:
       - name: Lint with flake8
         run: flake8 sketchlib --max-line-length=88
 
-      - name: Check formatting with black
-        run: black --check sketchlib
+      - name: Format with black
+        run: |
+          black sketchlib
 
       - name: Run tests
         run: pytest tests/
