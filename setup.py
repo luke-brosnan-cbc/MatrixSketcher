@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="sketchlib",
+    name="matrixsketcher",
     version="0.1.1",
     description="A collection of efficient matrix sketching methods",
     author="Luke Brosnan",
