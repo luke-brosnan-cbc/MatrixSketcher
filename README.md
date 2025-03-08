@@ -1,10 +1,10 @@
-# SketchLib: Efficient Matrix Sketching for Large-Scale Computations
+# MatrixSketcher: Efficient Matrix Sketching for Large-Scale Computations
 
-[![PyPI](https://img.shields.io/pypi/v/sketchlib?color=blue)](https://pypi.org/project/sketchlib/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/sketchlib)](https://pypi.org/project/sketchlib/)
-[![License](https://img.shields.io/github/license/luke-brosnan-cbc/sketchlib)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/matrixsketcher?color=blue)](https://pypi.org/project/matrixsketcher/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/matrixsketcher)](https://pypi.org/project/matrixsketcher/)
+[![License](https://img.shields.io/github/license/luke-brosnan-cbc/matrixsketcher)](LICENSE)
 
-SketchLib is a high-performance Python library for **matrix sketching**, enabling scalable and memory-efficient approximations for large matrices. It provides a suite of randomized algorithms for **dimensionality reduction, kernel approximation, leverage score sampling, and compressed linear algebra.**
+MatrixSketcher is a high-performance Python library for **matrix sketching**, enabling scalable and memory-efficient approximations for large matrices. It provides a suite of randomized algorithms for **dimensionality reduction, kernel approximation, leverage score sampling, and compressed linear algebra.**
 
 ---
 
@@ -25,7 +25,7 @@ Instead of processing an entire large dataset, matrix sketching allows you to:
 ---
 
 ## 🏗 **How Do Different Sketching Methods Differ?**
-Each method in SketchLib serves a different purpose:
+Each method in MatrixSketcher serves a different purpose:
 - **Random Projection**: Reduces dimensions while preserving distances.
 - **Subsampled SVD**: Creates a low-rank summary of a matrix.
 - **Nyström Approximation**: Speeds up kernel-based methods.
@@ -253,7 +253,7 @@ Where:
 ---
 
 ## 🔧 **Installation**
-To install SketchLib, simply run:
+To install MatrixSketcher, simply run:
 
 ```sh
-pip install sketchlib
+pip install matrixsketcher
