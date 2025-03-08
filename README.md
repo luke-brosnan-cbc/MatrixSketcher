@@ -112,7 +112,7 @@ Kernel methods (like SVMs, Gaussian Processes) use large **similarity matrices**
 </div>
 
 Where:
-- $K \in \mathbb{R}^{n \times n}$ is the **full kernel matrix** ($K_{ij} = \kappa(x_i, x_j)$).
+- $K \in \mathbb{R}^{n \times n}$ is the **full kernel matrix** $K_{ij} = \kappa(x_i, x_j)$.
 - $C \in \mathbb{R}^{n \times k}$ is formed by **selecting $k$ columns** of $K$.
 - $W \in \mathbb{R}^{k \times k}$ is the **intersection** of those selected columns (and corresponding rows).
 - $W^{-1}$ is the **pseudoinverse** of $W$.
@@ -215,12 +215,9 @@ $$
 
 Where:
 - $H_n$ is the **Hadamard matrix**, defined recursively:
-  $$
-  H_{2n} = \begin{bmatrix}
-    H_n & H_n \\
-    H_n & -H_n
-  \end{bmatrix}
-  $$
+
+$$H_{2n} = \begin{bmatrix}H_n & H_n \\\ H_n & -H_n\end{bmatrix}$$
+
 - $x$ is the **input vector (or matrix)**.
 - $n$ is the **size** (must be a power of 2).
 - The exponent $\otimes \log_{2} n$ means **Kronecker power**, building the matrix up to size $n$.
