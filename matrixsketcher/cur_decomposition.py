@@ -1,4 +1,4 @@
-# sketchlib/cur_decomposition.py
+# matrixsketcher/cur_decomposition.py
 
 
 import numpy as np
