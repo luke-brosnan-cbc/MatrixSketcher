@@ -1,4 +1,4 @@
-# sketchlib/row_sampling.py
+# matrixsketcher/row_sampling.py
 
 
 import numpy as np
