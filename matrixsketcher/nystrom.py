@@ -1,4 +1,4 @@
-# sketchlib/nystrom.py
+# matrixsketcher/nystrom.py
 
 
 import numpy as np
