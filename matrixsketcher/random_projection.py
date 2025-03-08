@@ -1,4 +1,4 @@
-# sketchlib/random_projection.py
+# matrixsketcher/random_projection.py
 
 
 import numpy as np
