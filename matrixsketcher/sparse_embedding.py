@@ -1,4 +1,4 @@
-# sketchlib/sparse_embedding.py
+# matrixsketcher/sparse_embedding.py
 
 
 from numpy.random import default_rng
