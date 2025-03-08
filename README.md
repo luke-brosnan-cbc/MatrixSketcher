@@ -1,7 +1,7 @@
 # MatrixSketcher: Efficient Matrix Sketching for Large-Scale Computations
 
 [![PyPI](https://img.shields.io/pypi/v/matrixsketcher?color=blue)](https://pypi.org/project/matrixsketcher/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/matrixsketcher.svg)](https://pypi.org/project/matrixsketcher/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/matrixsketcher.svg)](https://pypi.org/project/matrixsketcher/)
 [![License](https://img.shields.io/github/license/luke-brosnan-cbc/matrixsketcher)](LICENSE)
 
 MatrixSketcher is a high-performance Python library for **matrix sketching**, enabling scalable and memory-efficient approximations for large matrices. It provides a suite of randomized algorithms for **dimensionality reduction, kernel approximation, leverage score sampling, and compressed linear algebra.**
