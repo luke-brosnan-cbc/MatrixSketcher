@@ -1,4 +1,4 @@
-# sketchlib/subsampled_svd.py
+# matrixsketcher/subsampled_svd.py
 
 
 import numpy as np
