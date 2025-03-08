@@ -8,7 +8,7 @@ setup(
     description="A collection of efficient matrix sketching methods",
     author="Luke Brosnan",
     author_email="luke.brosnan.cbc@gmail.com",
-    url="https://github.com/luke-brosnan-cbc/sketchlib",
+    url="https://github.com/luke-brosnan-cbc/MatrixSketcher",
     packages=find_packages(),
     install_requires=[
         "numpy",
