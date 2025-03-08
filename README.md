@@ -32,7 +32,7 @@ Each method in SketchLib serves a different purpose:
 - **CUR Decomposition**: Selects **actual rows and columns** for interpretability.
 - **CountSketch**: Compresses matrices using hashing techniques.
 - **Leverage Score Sampling**: Smart sampling that keeps **important** data points.
-- **Fast Walsh-Hadamard Transform (FWHT)**: Structured projections for efficient compression.
+- **Fast Transforms (FWHT & FFT)**: Structured projections for efficient compression.
 
 ---
 
@@ -41,7 +41,7 @@ Each method in SketchLib serves a different purpose:
 ### **1. Random Projection (Johnson-Lindenstrauss)**
 💡 **Best for:** **Dimensionality reduction**, speeding up ML models, feature compression.
 
-**🔹 What it does:**  
+**What it does:**  
 Random Projection reduces the number of features **while preserving pairwise distances** between data points. This is crucial for ML applications where high-dimensional data slows down computation.
 
 📌 **Example Use Cases:**
@@ -49,24 +49,25 @@ Random Projection reduces the number of features **while preserving pairwise dis
 - **Reducing computational cost in large-scale regressions**.
 - **Making high-dimensional econometric models more efficient**.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $X' = X R$
 
 </div>
 
-where:
-- $X \in \mathbb{R}^{n \times p}$ is the original dataset.
-- $R \in \mathbb{R}^{p \times d}$ is a random matrix.
-- $X' \in \mathbb{R}^{n \times d}$ is the lower-dimensional sketch.
+Where:
+- $X \in \mathbb{R}^{n \times p}$ is the **original dataset** (with $n$ samples, $p$ features).
+- $R \in \mathbb{R}^{p \times d}$ is a **random matrix** (Gaussian or sparse) mapping $p$ features to $d$ dimensions.
+- $X' \in \mathbb{R}^{n \times d}$ is the **lower-dimensional projection**.
 
 ---
 
 ### **2. Subsampled Singular Value Decomposition (SVD)**
 💡 **Best for:** **Finding patterns in data, PCA, recommendation systems**.
 
-**🔹 What it does:**  
+**What it does:**  
 SVD decomposes a dataset into **simpler components**, but full computation is expensive. Subsampled SVD picks a **small subset of rows** and computes a **low-rank approximation**, making it **much faster**.
 
 📌 **Example Use Cases:**
@@ -74,47 +75,54 @@ SVD decomposes a dataset into **simpler components**, but full computation is ex
 - **Faster matrix factorization in recommendation engines**.
 - **Summarizing trends in econometric datasets**.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $X' = U S V^T$
 
 </div>
 
-where:
-- $U, S, V$ are derived from a **subsampled** version of $X$.
+Where:
+- $X' \in \mathbb{R}^{r \times p}$ is the **subsampled** part of $X$, formed by selecting $r$ random rows.
+- $U \in \mathbb{R}^{r \times k}$ is an **orthonormal matrix** of left singular vectors.
+- $S \in \mathbb{R}^{k \times k}$ is a **diagonal matrix** of singular values (sorted in descending order).
+- $V^T \in \mathbb{R}^{k \times p}$ is an **orthonormal matrix** of right singular vectors.
+- $k \ll \min(r, p)$ is the **desired rank**.
 
 ---
 
 ### **3. Nyström Approximation (Fast Kernel Methods)**
 💡 **Best for:** **Speeding up kernel-based ML models (SVMs, Gaussian Processes, Spectral Clustering)**.
 
-**🔹 What it does:**  
-Kernel methods (like SVMs and Gaussian Processes) use large **similarity matrices**, which scale poorly. Nyström approximation **selects only a subset of columns**, greatly speeding up computation.
+**What it does:**  
+Kernel methods (like SVMs, Gaussian Processes) use large **similarity matrices**, which scale poorly. Nyström approximation **selects only a subset of columns**, greatly speeding up computation.
 
 📌 **Example Use Cases:**
 - **Scaling up kernel SVMs and Gaussian Processes**.
 - **Fast spectral clustering for large datasets**.
 - **Econometric covariance estimation for large asset portfolios**.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $K \approx C W^{-1} C^T$
 
 </div>
 
-where:
-- $K$ is the full kernel matrix.
-- $C$ is a subset of columns.
-- $W$ is a small **intersection matrix**.
+Where:
+- $K \in \mathbb{R}^{n \times n}$ is the **full kernel matrix** ($K_{ij} = \kappa(x_i, x_j)$).
+- $C \in \mathbb{R}^{n \times k}$ is formed by **selecting $k$ columns** of $K$.
+- $W \in \mathbb{R}^{k \times k}$ is the **intersection** of those selected columns (and corresponding rows).
+- $W^{-1}$ is the **pseudoinverse** of $W$.
 
 ---
 
 ### **4. CUR Decomposition (Interpretable Low-Rank Approximation)**
 💡 **Best for:** **Feature selection, interpretability, compressed storage**.
 
-**🔹 What it does:**  
+**What it does:**  
 CUR selects **actual rows and columns** instead of abstract components (like SVD), making results **more interpretable**.
 
 📌 **Example Use Cases:**
@@ -122,58 +130,70 @@ CUR selects **actual rows and columns** instead of abstract components (like SVD
 - **Compressing massive recommendation matrices**.
 - **Enhancing interpretability in econometric models**.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $X \approx C W^{-1} R$
 
 </div>
 
-where:
-- $C, R$ are selected rows and columns.
-- $W$ is a core submatrix.
+Where:
+- $X \in \mathbb{R}^{n \times p}$ is the **original matrix**.
+- $C \in \mathbb{R}^{n \times k}$ is a **selection of $k$ columns** from $X$.
+- $R \in \mathbb{R}^{k \times p}$ is a **selection of $k$ rows** from $X$.
+- $W \in \mathbb{R}^{k \times k}$ is the **core submatrix** at the intersection of selected rows and columns.
+- $W^{-1}$ is the **pseudoinverse** of $W$.
 
 ---
 
 ### **5. CountSketch (Feature Hashing)**
 💡 **Best for:** **Reducing feature matrix size while preserving inner products**.
 
-**🔹 What it does:**  
+**What it does:**  
 CountSketch uses a **randomized hashing technique** to efficiently project large matrices into a smaller space while retaining key information.
 
 📌 **Example Use Cases:**
-- **Reducing dimensionality in NLP models (e.g., word embeddings)**.
-- **Fast feature engineering for large-scale ML and econometrics**.
+- **Reducing dimensionality in NLP models** (e.g., compressing word embeddings).
+- **Fast feature engineering** in large-scale ML and econometrics.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $X' = X S^T$
 
 </div>
 
-where $S$ is a **sparse, sign-randomized matrix**.
+Where:
+- $X \in \mathbb{R}^{n \times p}$ is the **original matrix**.
+- $S \in \mathbb{R}^{p \times d}$ is a **sparse, sign-randomized matrix** used for hashing.
+- $X' \in \mathbb{R}^{n \times d}$ is the **hashed (compressed) matrix**.
 
 ---
 
 ### **6. Leverage Score Sampling**
 💡 **Best for:** **Choosing the most "informative" rows in a dataset**.
 
-**🔹 What it does:**  
-Instead of randomly picking rows, **Leverage Score Sampling** selects rows **proportionally to their statistical importance**.
+**What it does:**  
+Instead of randomly picking rows, **Leverage Score Sampling** selects rows **proportional to their statistical importance**, measured via **leverage scores**.
 
 📌 **Example Use Cases:**
-- **Efficient econometric model estimation** with fewer samples.
-- **Speeding up spectral clustering and graph-based ML**.
+- **Efficient econometric model estimation** using fewer samples.
+- **Speeding up spectral clustering** and graph-based ML.
 
-📏 **Mathematical Formulation:**
+#### **Mathematical Formulation**
+
 <div align="center"; margin: 0>
-  
+
 ### $p_i = \frac{\sum_j U_{ij}^2}{\sum_{i,j} U_{ij}^2}$
 
 </div>
 
-where $U$ is the left singular matrix from SVD.
+Where:
+- $U \in \mathbb{R}^{n \times k}$ is the **left singular matrix** from an SVD of $X$.
+- $p_i$ is the probability of selecting row $i$.
+- $\sum_j U_{ij}^2$ is the **row norm** of $i$-th row in $U$, capturing how "important" row $i$ is.
 
 ---
 
@@ -183,60 +203,55 @@ where $U$ is the left singular matrix from SVD.
 #### 🔹 **Fast Walsh-Hadamard Transform (FWHT)**
 FWHT is a **structured random transformation** that replaces **dense random matrices** with a deterministic transform, making it computationally efficient.
 
-📏 **Mathematical Formulation:**
+**Mathematical Formulation:**
 <div align="center"; margin: 0>
-  
-$$H_{n} x = \frac{1}{\sqrt{n}} \left( \begin{bmatrix} 1 & 1 \\\ 1 & -1 \end{bmatrix} \right)^{\otimes \log_{2} n} x$$
+
+$$
+H_{n} x = \frac{1}{\sqrt{n}}
+\left( \begin{bmatrix} 1 & 1 \\\ 1 & -1 \end{bmatrix} \right)^{\otimes \log_{2} n} x
+$$
 
 </div>
 
-**Where:**
-- $H_n$ is the **Hadamard matrix**, which follows a recursive structure:
-  
-$$H_{2n} = \begin{bmatrix} H_n & H_n \\\ H_n & -H_n \end{bmatrix}$$
-
-- $x$ is the input vector (or matrix).
-- $n$ is the size of the transformation (must be a power of 2).
-- The notation $\otimes \log_{2} n$ represents the **Kronecker power**, recursively expanding the transformation.
+Where:
+- $H_n$ is the **Hadamard matrix**, defined recursively:
+  $$
+  H_{2n} = \begin{bmatrix}
+    H_n & H_n \\
+    H_n & -H_n
+  \end{bmatrix}
+  $$
+- $x$ is the **input vector (or matrix)**.
+- $n$ is the **size** (must be a power of 2).
+- The exponent $\otimes \log_{2} n$ means **Kronecker power**, building the matrix up to size $n$.
 
 📌 **Example Use Cases:**
-- **Speeding up least squares regression in ML**.
+- **Speeding up least squares regression** in ML.
 - **Preconditioning large econometric models**.
 
 #### 🔹 **Fast Fourier Transform (FFT)**
 FFT is a **widely used transformation** for analyzing frequency components in signals. Unlike FWHT, which uses **binary operations**, FFT is optimized for **sinusoids and continuous data**.
 
-📏 Mathematical Formulation:
-
+**Mathematical Formulation:**
 <div align="center"; margin: 0>
 
 ### $X_k = \sum_{n=0}^{N-1} x_n e^{-2\pi i k n / N}, \quad k = 0, \dots, N-1$
 
 </div>
 
-**Where:**
-- $X_k$ represents the **Fourier coefficients**, capturing different frequency components.
-- $x_n$ is the input signal in the **time domain**.
+Where:
+- $X_k$ are the **Fourier coefficients**, capturing frequency components.
+- $x_n$ is the **input signal** in the time domain.
 - $N$ is the total number of points in the signal.
-- $e^{-2\pi i k n / N}$ is the complex exponential term, which represents rotations in the **frequency domain**.
+- $e^{-2\pi i k n / N}$ is the **complex exponential** representing rotations in the frequency domain.
 
 📌 **Example Use Cases:**
-- **Efficient spectral analysis in signal processing**.
-- **Time series forecasting in econometrics**.
-- **Speeding up convolutional operations in ML**.
-
-
-**Key Differences:**
-
-| **Feature**  | **FWHT** | **FFT**  |
-|-------------|---------|---------|
-| Works on  | Binary data | Continuous data (sinusoids) |
-| Application | ML, econometrics | Signal processing, ML |
-| Speed | Faster for structured matrices | Efficient for time series |
-
-
+- **Efficient spectral analysis** in signal processing.
+- **Time series forecasting** in econometrics.
+- **Speeding up convolutional operations** in ML.
 
 ---
+
 ## 🔧 **Installation**
 To install SketchLib, simply run:
 
