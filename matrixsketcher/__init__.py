@@ -1,4 +1,4 @@
-# MatrixSketcher/__init__.py
+# matrixsketcher/__init__.py
 
 from .random_projection import random_projection
 from .subsampled_svd import subsampled_svd
