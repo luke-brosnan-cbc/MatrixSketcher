@@ -1,4 +1,4 @@
-# sketchlib/_utils.py
+# matrixsketcher/_utils.py
 
 
 import warnings
