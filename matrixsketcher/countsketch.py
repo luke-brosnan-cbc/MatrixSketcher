@@ -1,4 +1,4 @@
-# sketchlib/countsketch.py
+# matrixsketcher/countsketch.py
 
 
 import numpy as np
