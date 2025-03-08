@@ -1,4 +1,4 @@
-# sketchlib/leverage_score.py
+# matrixsketcher/leverage_score.py
 
 
 import numpy as np
