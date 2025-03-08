@@ -1,4 +1,4 @@
-# sketchlib/fast_transforms.py
+# matrixsketcher/fast_transforms.py
 
 
 import numpy as np
