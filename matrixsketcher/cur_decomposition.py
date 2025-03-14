@@ -12,7 +12,7 @@ from ._utils import _validate_rank
 def cur_decomposition(X, d_rows, d_cols, rank=None, random_state=None, sampling="uniform",
                       regularization=0.0):
     """
-    CUR decomposition with optional leverage score sampling and regularization.
+    CUR decomposition with leverage-based column selection and configurable row selection.
     
     Parameters:
     - X (array or sparse matrix): Input data matrix (n x k)
@@ -20,7 +20,7 @@ def cur_decomposition(X, d_rows, d_cols, rank=None, random_state=None, sampling=
     - d_cols (int): Number of columns to select
     - rank (int, optional): Rank for leverage score computation (default: min(n, p) - 1)
     - random_state (int, optional): Seed for reproducibility
-    - sampling (str): "uniform" or "leverage"
+    - sampling (str): "uniform" (random row selection) or "leverage" (leverage score row selection)
     - regularization (float): Small positive value for numerical stability (default: 0.0)
 
     Returns:
@@ -40,20 +40,17 @@ def cur_decomposition(X, d_rows, d_cols, rank=None, random_state=None, sampling=
     if sampling not in {"uniform", "leverage"}:
         raise ValueError("sampling must be 'uniform' or 'leverage'")
 
-    # Column selection
-    if sampling == "leverage":
-        if isspmatrix(X):
-            _, s, Vt = svds(X, k=rank)
-        else:
-            _, s, Vt = svd(X, full_matrices=False)
-        Vt = Vt[np.argsort(s)[::-1], :]
-        col_probs = np.sum(Vt[:rank].T**2, axis=1)
-        col_probs /= np.sum(col_probs)
-        col_indices = rng.choice(p, d_cols, replace=False, p=col_probs)
+    # Column selection (always leverage-based)
+    if isspmatrix(X):
+        _, s, Vt = svds(X, k=rank)
     else:
-        col_indices = rng.choice(p, d_cols, replace=False)
+        _, s, Vt = svd(X, full_matrices=False)
+    Vt = Vt[np.argsort(s)[::-1], :]
+    col_probs = np.sum(Vt[:rank].T**2, axis=1)
+    col_probs /= np.sum(col_probs)
+    col_indices = rng.choice(p, d_cols, replace=False, p=col_probs)
 
-    # Row selection
+    # Row selection (can be leverage-based or uniform)
     if sampling == "leverage":
         if isspmatrix(X):
             U, s, _ = svds(X, k=rank)
@@ -63,7 +60,7 @@ def cur_decomposition(X, d_rows, d_cols, rank=None, random_state=None, sampling=
         row_probs = np.sum(U**2, axis=1)
         row_probs /= np.sum(row_probs)
         row_indices = rng.choice(n, d_rows, replace=False, p=row_probs)
-    else:
+    else:  # Uniform row selection
         row_indices = rng.choice(n, d_rows, replace=False)
 
     # Build C, R, W
