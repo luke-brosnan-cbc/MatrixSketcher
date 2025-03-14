@@ -10,64 +10,76 @@ from ._utils import _validate_rank
 
 
 def leverage_score_sampling(X, sample_size, rank=None, random_state=None, 
-                            scale_rows=False, sampling="leverage"):
+                            scale=True, sampling="leverage", axis=0):
     """
-    Row sampling using leverage scores, uniform selection, or weighted norm-based selection.
-    
+    Perform leverage score sampling on either rows or columns.
+
     Parameters:
     - X (array or sparse matrix): Input data matrix (n x p)
-    - sample_size (int): Number of rows to sample
+    - sample_size (int): Number of rows or columns to sample (depends on axis)
     - rank (int, optional): Rank for SVD (only used if sampling="leverage")
     - random_state (int, optional): Seed for reproducibility
-    - scale_rows (bool, optional): Whether to scale rows by sqrt(1/prob)
-    - sampling (str): "leverage", "uniform", or "weighted"
+    - scale (bool, optional): Whether to scale selected rows/columns by sqrt(1/prob)
+    - sampling (str): "leverage", "uniform", or "weighted" (weighted/uniform only for rows)
+    - axis (int): 0 for row sampling (default), 1 for column sampling
 
     Returns:
-    - Sampled subset of rows from X (scaled if requested)
+    - Sampled subset of X with selected rows or columns.
     """
+
     rng = default_rng(random_state)
     n, p = X.shape
 
-    if sample_size > n:
-        raise ValueError(f"sample_size {sample_size} exceeds matrix rows {n}")
+    if axis not in {0, 1}:
+        raise ValueError("axis must be 0 (rows) or 1 (columns)")
+    
+    if axis == 1 and sampling in {"uniform", "weighted"}:
+        raise ValueError("Uniform and weighted sampling are only supported for rows.")
+
+    dim = n if axis == 0 else p  # Number of rows if axis=0, columns if axis=1
+    if sample_size > dim:
+        raise ValueError(f"sample_size {sample_size} exceeds dimension size {dim}")
 
     if sampling not in {"uniform", "leverage", "weighted"}:
-        raise ValueError("sampling must be 'uniform', 'leverage', or 'weighted'")
+        raise ValueError('sampling must be "leverage", "uniform", or "weighted"')
 
     if sampling == "leverage":
         use_partial = (rank is not None) and (rank < min(n, p))
-        if use_partial:
-            rank = _validate_rank(rank, min(n, p), "leverage_score_sampling")
+        rank = _validate_rank(rank, min(n, p), "leverage_score_sampling") if use_partial else min(n, p)
+
+        # Compute SVD
+        if axis == 0:  # Row sampling (use U)
             U, s, _ = svds(X, k=rank) if isspmatrix(X) else svds(X, k=rank)
             U = U[:, np.argsort(s)[::-1]]  # Sort by singular values
-        else:
-            U = svd(X.toarray() if isspmatrix(X) else X, full_matrices=False)[0]
+            leverage_scores = np.sum(U**2, axis=1)
+        else:  # Column sampling (use V)
+            _, s, Vt = svds(X, k=rank) if isspmatrix(X) else svds(X, k=rank)
+            V = Vt[np.argsort(s)[::-1], :].T  # Sort and transpose
+            leverage_scores = np.sum(V**2, axis=1)
 
-        leverage_scores = np.sum(U**2, axis=1)
         leverage_probs = leverage_scores / np.sum(leverage_scores)
-        selected_rows = rng.choice(n, size=sample_size, replace=False, p=leverage_probs)
+        selected_indices = rng.choice(dim, size=sample_size, replace=False, p=leverage_probs)
 
-    elif sampling == "weighted":
-        if isspmatrix(X):
-            row_norms = np.array(X.power(2).sum(axis=1)).ravel()
-        else:
-            row_norms = np.sum(X**2, axis=1)
+    elif sampling == "weighted":  # Only applies to row sampling
+        row_norms = np.array(X.power(2).sum(axis=1)).ravel() if isspmatrix(X) else np.sum(X**2, axis=1)
         weighted_probs = row_norms / np.sum(row_norms)
-        selected_rows = rng.choice(n, size=sample_size, replace=False, p=weighted_probs)
+        selected_indices = rng.choice(n, size=sample_size, replace=False, p=weighted_probs)
 
-    else:  # Uniform sampling
-        selected_rows = rng.choice(n, size=sample_size, replace=False)
+    else:  # Uniform sampling (only for rows)
+        selected_indices = rng.choice(n, size=sample_size, replace=False)
 
-    if scale_rows:
-        scaled_rows = []
-        for idx in selected_rows:
-            row = X[idx].toarray().ravel() if isspmatrix(X) else X[idx]
+    # Scale selected rows/columns if requested
+    if scale:
+        scaled_rows_or_cols = []
+        for idx in selected_indices:
+            vec = X[idx].toarray().ravel() if isspmatrix(X) else X[idx] if axis == 0 else X[:, idx]
             prob = (
                 leverage_probs[idx] if sampling == "leverage"
                 else weighted_probs[idx] if sampling == "weighted"
                 else 1
             )
-            scaled_rows.append(row / np.sqrt(prob))
-        return np.vstack(scaled_rows)
+            scaled_rows_or_cols.append(vec / np.sqrt(prob))
 
-    return X[selected_rows].copy() if isspmatrix(X) else X[selected_rows]
+        return np.vstack(scaled_rows_or_cols) if axis == 0 else np.column_stack(scaled_rows_or_cols)
+
+    return X[selected_indices, :] if axis == 0 else X[:, selected_indices]
