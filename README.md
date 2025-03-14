@@ -36,12 +36,9 @@ Each method in MatrixSketcher serves a different purpose:
 
 ---
 
-## 🔢 **Core Algorithms**
-
-<details>
-<summary>1. Random Gaussian Projection (Johnson-Lindenstrauss)</summary>
-<br>
-### **Random Projection (Johnson-Lindenstrauss)**
+## 🔢 **Core Algorithms and use cases**
+  
+### **1. Random Projection (Johnson-Lindenstrauss)**
 💡 **Best for:** **Dimensionality reduction**, speeding up ML models, feature compression.
 
 **What it does:**  
@@ -65,12 +62,16 @@ Where:
 - $R \in \mathbb{R}^{p \times d}$ is a **random matrix** (Gaussian or sparse) mapping $p$ features to $d$ dimensions.
 - $X' \in \mathbb{R}^{n \times d}$ is the **lower-dimensional projection**.
 
-</details>
+
 
 <details>
-<summary>2. Subsampled Singular Value Decomposition (SVD)</summary>
+<summary>Example usage</summary>
 <br>
-### **Subsampled Singular Value Decomposition (SVD)**
+</details>
+
+---
+  
+### **2. Subsampled Singular Value Decomposition (SVD)**
 💡 **Best for:** **Finding patterns in data, PCA, recommendation systems**.
 
 **What it does:**  
@@ -96,12 +97,15 @@ Where:
 - $V^T \in \mathbb{R}^{k \times p}$ is an **orthonormal matrix** of right singular vectors.
 - $k \ll \min(r, p)$ is the **desired rank**.
 
-</details>
 
 <details>
-<summary>3. Nyström Approximation (Fast Kernel Methods)</summary>
+<summary>Example usage</summary>
 <br>
-### **Nyström Approximation (Fast Kernel Methods)**
+</details>
+
+---
+  
+### **3. Nyström Approximation (Fast Kernel Methods)**
 💡 **Best for:** **Speeding up kernel-based ML models (SVMs, Gaussian Processes, Spectral Clustering)**.
 
 **What it does:**  
@@ -125,12 +129,15 @@ Where:
 - $C \in \mathbb{R}^{n \times k}$ is formed by **selecting $k$ columns** of $K$.
 - $W \in \mathbb{R}^{k \times k}$ is the **intersection** of those selected columns (and corresponding rows).
 - $W^{-1}$ is the **pseudoinverse** of $W$.
-  
-</details>
+
 
 <details>
-<summary>4. CUR Decomposition (Interpretable Low-Rank Approximation)</summary>
+<summary>Example usage</summary>
 <br>
+</details>
+
+---
+  
 ### **4. CUR Decomposition (Interpretable Low-Rank Approximation)**
 💡 **Best for:** **Feature selection, interpretability, compressed storage**.
 
@@ -157,12 +164,14 @@ Where:
 - $W \in \mathbb{R}^{k \times k}$ is the **core submatrix** at the intersection of selected rows and columns.
 - $W^{-1}$ is the **pseudoinverse** of $W$.
 
+<details>
+<summary>Example usage</summary>
+<br>
 </details>
 
-<details>
-<summary>5. CountSketch (Feature Hashing)</summary>
-<br>
-### **CountSketch (Feature Hashing)**
+---
+  
+### **5. CountSketch (Feature Hashing)**
 💡 **Best for:** **Reducing feature matrix size while preserving inner products**.
 
 **What it does:**  
@@ -185,12 +194,15 @@ Where:
 - $S \in \mathbb{R}^{p \times d}$ is a **sparse, sign-randomized matrix** used for hashing.
 - $X' \in \mathbb{R}^{n \times d}$ is the **hashed (compressed) matrix**.
 
-</details>
 
 <details>
-<summary>6. Leverage Score Sampling</summary>
+<summary>Example usage</summary>
 <br>
-### **Leverage Score Sampling**
+</details>
+
+---
+
+### **6. Leverage Score Sampling**
 💡 **Best for:** **Choosing the most "informative" rows in a dataset**.
 
 **What it does:**  
@@ -213,18 +225,22 @@ Where:
 - $p_i$ is the probability of selecting row $i$.
 - $\sum_j U_{ij}^2$ is the **row norm** of $i$-th row in $U$, capturing how "important" row $i$ is.
 
-</details>
 
 <details>
-<summary>7. Fast Transforms (FWHT & FFT)</summary>
+<summary>Example usage</summary>
 <br>
-### **Fast Transforms (FWHT & FFT)**
+</details>
+
+---
+  
+### **7. Fast Transforms (FWHT & FFT)**
 💡 **Best for:** **Structured random projections, fast transforms in signal processing and machine learning**.
 
 #### 🔹 **Fast Walsh-Hadamard Transform (FWHT)**
 FWHT is a **structured random transformation** that replaces **dense random matrices** with a deterministic transform, making it computationally efficient.
 
 **Mathematical Formulation:**
+
 <div align="center"; margin: 0>
 
 $$
@@ -247,6 +263,11 @@ $$H_{2n} = \begin{bmatrix}H_n & H_n \\\ H_n & -H_n\end{bmatrix}$$
 - **Speeding up least squares regression** in ML.
 - **Preconditioning large econometric models**.
 
+<details>
+<summary>Example usage</summary>
+<br>
+</details>
+
 #### 🔹 **Fast Fourier Transform (FFT)**
 FFT is a **widely used transformation** for analyzing frequency components in signals. Unlike FWHT, which uses **binary operations**, FFT is optimized for **sinusoids and continuous data**.
 
@@ -268,7 +289,12 @@ Where:
 - **Time series forecasting** in econometrics.
 - **Speeding up convolutional operations** in ML.
 
+<details>
+<summary>Example usage</summary>
+<br>
 </details>
+
+---
 
 ## 🔧 **Installation**
 To install MatrixSketcher, simply run:
