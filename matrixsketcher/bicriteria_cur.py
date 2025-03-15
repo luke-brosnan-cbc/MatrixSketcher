@@ -21,9 +21,7 @@ def bicriteria_cur(X, d_rows, d_cols, rank=None, random_state=None):
     - random_state (int, optional): Seed for reproducibility
 
     Returns:
-    - C (array): Selected columns
-    - R (array): Selected rows
-    - W (array): Intersection matrix
+    - X_approx (array): CUR approximation of X
     """
     rng = default_rng(random_state)
     n, p = X.shape
@@ -55,4 +53,7 @@ def bicriteria_cur(X, d_rows, d_cols, rank=None, random_state=None):
     # Step 4: Compute pseudoinverse of W for CUR reconstruction
     W_pinv = pinv(W)
 
-    return C, W_pinv, R
+    # Step 5: Compute CUR approximation
+    X_approx = C @ W_pinv @ R  # Matrix multiplication to reconstruct X
+
+    return X_approx
