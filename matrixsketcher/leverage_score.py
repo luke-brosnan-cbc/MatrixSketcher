@@ -17,7 +17,7 @@ def leverage_score_sampling(X, sample_size, rank=None, random_state=None,
     Parameters:
     - X (array or sparse matrix): Input data matrix (n x p)
     - sample_size (int): Number of rows or columns to sample (depends on axis)
-    - rank (int, optional): Rank for SVD (only used if sampling="leverage")
+    - rank (int, optional): Rank for SVD (only used if sampling="leverage", defaults to min(n, p) - 1)
     - random_state (int, optional): Seed for reproducibility
     - scale (bool, optional): Whether to scale selected rows/columns by sqrt(1/prob)
     - sampling (str): "leverage", "uniform", or "weighted" (weighted/uniform only for rows)
@@ -44,8 +44,9 @@ def leverage_score_sampling(X, sample_size, rank=None, random_state=None,
         raise ValueError('sampling must be "leverage", "uniform", or "weighted"')
 
     if sampling == "leverage":
-        use_partial = (rank is not None) and (rank < min(n, p))
-        rank = _validate_rank(rank, min(n, p), "leverage_score_sampling") if use_partial else min(n, p)
+        # Ensure rank is at most min(n, p) - 1
+        max_rank = min(n, p) - 1
+        rank = _validate_rank(rank, max_rank, "leverage_score_sampling") if rank is not None else max_rank
 
         # Compute SVD
         if axis == 0:  # Row sampling (use U)
