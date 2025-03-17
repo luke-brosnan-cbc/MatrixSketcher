@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="matrixsketcher",
-    version="0.1.2",
+    version="0.1.3",
     description="A collection of efficient matrix sketching methods",
     author="Luke Brosnan",
     author_email="luke.brosnan.cbc@gmail.com",
