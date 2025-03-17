@@ -75,6 +75,5 @@ def cur_decomposition(X, d_rows, d_cols, rank=None, random_state=None, sampling=
 
     if regularization > 0:
         W += regularization * np.eye(W.shape[0])
-    W_pinv = pinv(W)
 
-    return C.dot(W_pinv).dot(R)
+    return C, W, R
