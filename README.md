@@ -48,7 +48,7 @@ A **hashing-based** technique that efficiently compresses large matrices while p
 Given a matrix $X \in \mathbb{R}^{N \times P}$, we define:
 
 1. A hash function: $h$: $[1,P] \to [1,D]$ which maps each column $j$ to a sketch bucket.
-2. A sign function: $\sigma$: $[1,P] \to \{+1,-1 \}$ whichassigns each column a random sign.<br><br>
+2. A sign function: $\sigma$: $[1,P] \to \{+1,-1 \}$ which assigns each column a random sign.<br><br>
 
 The **sketch matrix** $S$ is constructed as:
 
@@ -84,7 +84,7 @@ Due to the randomized hashing mechanism, the **error introduced by CountSketch**
 
 </div>
 
-This means that increasing \( D \) **reduces the error** while keeping computations **efficient**.<br><br><br><br>
+This means that increasing $D$ **reduces the error** while keeping computations **efficient**.<br><br><br><br>
  
 
 <details>
@@ -450,7 +450,7 @@ where:
 
 - $S_r$ and $S_c$ are index sets of selected rows and columns.
 
-- $d_{\text{rows}} $ and $ d_{\text{cols}}$ control the approximation size.
+- $d_{\text{rows}}$ and $d_{\text{cols}}$ control the approximation size.
 
 Since computing the best $W$ directly is NP-hard, a greedy approximation is used.<br><br>
 
