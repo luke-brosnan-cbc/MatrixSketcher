@@ -227,7 +227,7 @@ print("R shape:", R.shape)  # (50, 500)
 
 A structured, deterministic transform analogous to the FFT but operating over $\pm 1$ values rather than complex exponentials. The Walsh-Hadamard matrix is defined recursively:
 
-$$H_1 = [1], \qquad H_{2n} = \begin{bmatrix} H_n & H_n \\ H_n & -H_n \end{bmatrix}$$
+$$H_1 = [1], \qquad H_{2n} =\begin{bmatrix} H_n & H_n \\\ H_n & -H_n \end{bmatrix}$$
 
 For $X \in \mathbb{R}^{N \times P}$ with $N = 2^k$, the transform applies $H_N$ row-wise:
 
